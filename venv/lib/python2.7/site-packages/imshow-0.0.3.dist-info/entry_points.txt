@@ -1,0 +1,3 @@
+[console_scripts]
+imshow = imshow.imshow:main
+
