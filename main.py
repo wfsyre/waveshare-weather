@@ -30,5 +30,11 @@ while(True):
         print("Going to sleep")
         time.sleep(60 * 30)
     except:
+        print "Attempting to salvage"
+        epd.init()
+        epd.Clear(0xFF)
+        epd.sleep()
+        print "That's the best I got"
+        time.sleep(4)
         print 'traceback.format_exc():\n%s' % traceback.format_exc()
 

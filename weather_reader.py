@@ -12,10 +12,25 @@ y_margin = 15
 x_padding = 15
 
 def get_atlanta_json():
-    return requests.get("https://api.weather.gov/points/33.7722,-84.3902").json()
+    json = None
+    while json is None:
+        print("retrying atlanta")
+        try:
+            data = requests.get("https://api.weather.gov/points/33.7722,-84.3902", timeout=0.5)
+            return data.json()
+        except:
+            pass
 
 def get_hourly_data(url):
-    return requests.get(url).json()
+    json = None
+    while json is None:
+        print("retrying hourly")
+        try:
+            data = requests.get(url, timeout=0.5)
+            json = data.json()
+            return json
+        except:
+            pass
 
 def get_time_string(hour):
     if hour == 0:
@@ -35,11 +50,17 @@ def get_image_from_string(string, chance, hour):
         img = Image.open('rain.png')
     elif string == "Rain Showers Likely":
         img = Image.open('rain.png')
+    elif string == "Rain Showers":
+        img = Image.open('rain.png')
     elif string == "Showers And Thunderstorms Likely":
+        img = Image.open('storm.png')
+    elif string == "Showers And Thunderstorms":
         img = Image.open('storm.png')
     elif string == "Mostly Cloudy":
         img = Image.open('cloud.png')
     elif string == "Cloudy":
+        img = Image.open('cloud.png')
+    elif string == "Patchy Fog":
         img = Image.open('cloud.png')
     elif 20 > hour >= 6:
         if string == "Chance Showers And Thunderstorms":
@@ -111,7 +132,7 @@ def get_weather_image(reloads, message):
     weather_types = {}
     for i in range(0, 10):
         period = periods[i]
-        start = datetime.datetime.strptime(period['startTime'], '%Y-%m-%dT%H:%M:%S-04:00')
+        start = datetime.datetime.strptime(period['startTime'][:-6], '%Y-%m-%dT%H:%M:%S')
         # end = datetime.datetime.strptime(period['endTime'], '%Y-%m-%dT%H:%M:%S-04:00')
         url = period['icon']
         comma = url.find(',')
