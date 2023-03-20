@@ -4,22 +4,24 @@ import requests
 import datetime
 from PIL import Image, ImageFont, ImageDraw
 
-EPD_WIDTH       = 640
-EPD_HEIGHT      = 384
+EPD_WIDTH = 640
+EPD_HEIGHT = 384
 x_margin = 32
 y_padding = 25
 y_margin = 15
 x_padding = 15
+
 
 def get_atlanta_json():
     json = None
     while json is None:
         print("retrying atlanta")
         try:
-            data = requests.get("https://api.weather.gov/points/33.7722,-84.3902", timeout=0.5)
+            data = requests.get("https://api.weather.gov/points/33.896284360721175,-84.445948540257", timeout=0.5)
             return data.json()
         except:
             pass
+
 
 def get_hourly_data(url):
     json = None
@@ -32,6 +34,7 @@ def get_hourly_data(url):
         except:
             pass
 
+
 def get_time_string(hour):
     if hour == 0:
         return str(12) + " AM"
@@ -41,6 +44,7 @@ def get_time_string(hour):
         return str(hour) + " PM"
     else:
         return str(hour - 12) + " PM"
+
 
 def get_image_from_string(string, chance, hour):
     Himage = Image.new('1', (100, 125), 255)
@@ -113,20 +117,23 @@ def get_image_from_string(string, chance, hour):
     return Himage
 
 
-
-
-
 def get_weather_image(reloads, message):
-    reloads_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSans.ttf', 12)
-    message_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSansBold.ttf', 20)
-    weather_time_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSans.ttf', 18)
-    heading_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSansBold.ttf', 25)
+    try:
+        reloads_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSans.ttf', 12)
+        message_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSansBold.ttf', 20)
+        weather_time_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSans.ttf', 18)
+        heading_font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeSansBold.ttf', 25)
+    except:
+        reloads_font = ImageFont.load_default()
+        message_font = ImageFont.load_default()
+        weather_time_font = ImageFont.load_default()
+        heading_font = ImageFont.load_default()
     json = get_atlanta_json()
     hourly_json = get_hourly_data(json['properties']['forecastHourly'])
     periods = hourly_json['properties']['periods']
     Himage = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 255)
     draw = ImageDraw.Draw(Himage)
-    draw.text((x_margin, y_margin), "Weather Forecast for " + str(datetime.datetime.now().strftime("%A, %B %-d")), font=heading_font)
+    draw.text((x_margin, y_margin), "Weather Forecast for " + str(datetime.datetime.now().strftime("%A, %B %d")), font=heading_font)
     lastx = x_margin
     lasty = 70
     weather_types = {}
