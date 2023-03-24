@@ -13,9 +13,13 @@ x_padding = 15
 
 
 def get_atlanta_json():
+    print("Get Atlanta JSON")
     json = None
+    num_retry = 0
     while json is None:
-        print("retrying atlanta")
+        if num_retry > 0:
+            print("retrying atlanta")
+        num_retry += 1
         try:
             data = requests.get("https://api.weather.gov/points/33.896284360721175,-84.445948540257", timeout=0.5)
             return data.json()
@@ -24,9 +28,13 @@ def get_atlanta_json():
 
 
 def get_hourly_data(url):
+    print("Get Hourly JSON")
     json = None
+    num_retry = 0
     while json is None:
-        print("retrying hourly")
+        if num_retry > 0:
+            print("retrying hourly")
+        num_retry += 1
         try:
             data = requests.get(url, timeout=0.5)
             json = data.json()
