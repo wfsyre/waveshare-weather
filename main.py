@@ -15,7 +15,7 @@ def get_text():
     return message
 
 
-while(True):
+while True:
     try:
         print("Waking up")
         Himage = weather_reader.get_weather_image(reloads, get_text())
@@ -30,11 +30,7 @@ while(True):
         print("Going to sleep")
         time.sleep(60 * 30)
     except:
-        print("Attempting to salvage")
-        epd.init()
-        epd.Clear(0xFF)
-        epd.sleep()
-        print("That's the best I got")
+        print("Error encountered, waiting")
         time.sleep(4)
         print('traceback.format_exc():\n%s' % traceback.format_exc())
 
