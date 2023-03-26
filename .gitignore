@@ -1,3 +1,6 @@
 venv/
 .idea/
 *.pyc
+message.txt
+*.sh
+*.out
