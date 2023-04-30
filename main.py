@@ -1,16 +1,16 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-
 import epd7in5
 import time
 import weather_reader
 import traceback
+import os
 
 reloads = 0
 
 
 def get_text():
-    f = open("message.txt")
+    f = open(os.path.dirname(os.path.abspath(__file__)) + "/message.txt")
     message = f.readline()
     return message
 
